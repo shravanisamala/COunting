@@ -4,9 +4,11 @@ library(shinydashboard)
 library(shinyBS)
 library(shinyWidgets)
 library(boastUtils)
+library(shinyjs)
 
 # Load additional dependencies and setup functions
 # source("global.R")
+
 
 # Define UI for App ----
 ui <- list(
@@ -15,7 +17,7 @@ ui <- list(
     skin = "blue",
     ### Create the app header ----
     dashboardHeader(
-      title = "App Template", # You may use a shortened form of the title here
+      title = "Counting Techniques", # You may use a shortened form of the title here
       titleWidth = 250,
       tags$li(class = "dropdown", actionLink("info", icon("info"))),
       tags$li(
@@ -36,9 +38,7 @@ ui <- list(
         menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
         menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
-        menuItem("Challenge", tabName = "challenge", icon = icon("gears")),
         menuItem("Game", tabName = "game", icon = icon("gamepad")),
-        menuItem("Wizard", tabName = "wizard", icon = icon("hat-wizard")),
         menuItem("References", tabName = "references", icon = icon("leanpub"))
       ),
       tags$div(
@@ -53,16 +53,20 @@ ui <- list(
         tabItem(
           tabName = "overview",
           withMathJax(),
-          h1("Sample Application for BOAST Apps"), # This should be the full name.
-          p("This is a sample Shiny application for BOAST."),
+          h1("Counting Techniques"), # This should be the full name.
+          p("This app is designed to teach and review combinatorics, permutations
+            , and other basic counting principles."),
           h2("Instructions"),
-          p("This information will change depending on what you want to do."),
           tags$ol(
-            tags$li("Review any prerequiste ideas using the Prerequistes tab."),
-            tags$li("Explore the Exploration Tab."),
-            tags$li("Challenge yourself."),
-            tags$li("Play the game to test how far you've come.")
+            tags$li("Review the Prerequistes tab to learn about the different
+                    counting techniques as well as how to use context and/or wording
+                    fromthe problem to solve it."),
+            tags$li("Use the Explore page to practice counting techniques through 
+                    clothing-related scenarios."),
+            tags$li("Use the Challenge page to further practice counting techniques
+                    through poker-style scenarios.")
           ),
+          
           ##### Go Button--location will depend on your goals ----
           div(
             style = "text-align: center",
@@ -70,7 +74,7 @@ ui <- list(
               inputId = "go1",
               label = "GO!",
               size = "large",
-              icon = icon("bolt"),
+              icon = icon("book"),
               style = "default"
             )
           ),
@@ -79,15 +83,15 @@ ui <- list(
           br(),
           h2("Acknowledgements"),
           p(
-            "This version of the app was developed and coded by Neil J.
-            Hatfield  and Robert P. Carey, III.",
+            "This version of the app was developed and coded by Kellien Peritz and 
+            Shravani Samala.",
             br(),
-            "We would like to extend a special thanks to the Shiny Program
-            Students.",
+            "We would like to extend a special thanks to Dr. Dennis Pearl for providing 
+            the question bank.",
             br(),
             br(),
             br(),
-            div(class = "updated", "Last Update: 5/14/2021 by NJH.")
+            div(class = "updated", "Last Update: 6/7/2021 by NJH.")
           )
         ),
         #### Set up the Prerequisites Page ----
@@ -98,94 +102,269 @@ ui <- list(
           p("In order to get the most out of this app, please review the
             following:"),
           tags$ul(
-            tags$li("Pre-req 1"),
-            tags$li("Pre-req 2"),
-            tags$li("Pre-req 3"),
-            tags$li("Pre-req 4")
+            tags$li("The difference between combinations, and the other counting 
+                    techniques."),
+            tags$li("Understand how different wording in a problem changes the
+                    way you solve a problem (e.g., at most vs. at least)")
           ),
-          p("Notice the use of an unordered list; users can move through the
-            list any way they wish."),
-          box(
-            title = strong("Null Hypothesis Significance Tests (NHSTs)"),
-            status = "primary",
-            collapsible = TRUE,
-            collapsed = TRUE,
-            width = '100%',
-            "In the Confirmatory Data Analysis tradition, null hypothesis
-            significance tests serve as a critical tool to confirm that a
-            particular theoretical model describes our data and to make a
-            generalization from our sample to the broader population
-            (i.e., make an inference). The null hypothesis often reflects the
-            simpler of two models (e.g., 'no statistical difference',
-            'there is an additive difference of 1', etc.) that we will use to
-            build a sampling distribution for our chosen estimator. These
-            methods let us test whether our sample data are consistent with this
-            simple model (null hypothesis)."
+          br(), 
+          h3("Counting Techniques"),
+          fluidRow(
+            box(
+              title = strong("Combinations"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = FALSE,
+              width = 6,
+              p("If there are:"),
+              tags$ul(
+                tags$li("\\({n}\\) objects to be taken \\({r}\\) at a time"), 
+                tags$li("Number of ", tags$em("unordered"), "subsets or Combinations is "), 
+                tags$li("\\(_{n}C_{r}=\\dfrac{n!}{r!(n-r)!}\\)")
+              )
+            ),
+            box(
+              title = strong("Permutations"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = FALSE,
+              width = 6,
+              p("If there are:"),
+              tags$ul( 
+                tags$li("\\({n}\\) choices for the \\(1^{st}\\) position"), 
+                tags$li("\\({n-1}\\) choices for the \\(2^{nd}\\) position"), 
+                tags$li("\\({n-2}\\) choices for the \\(3^{rd}\\) position"), 
+                tags$li("Then nPr or permutations of ", tags$em("n"), "objects
+                        that can be arranged in ", ("r"), "at a time or ordered 
+                        subsets is "), 
+                tags$li("\\(_{n}P_{r}=\\dfrac{n!}{(n-r)!}\\)")
+              )
+            )
           ),
-          box(
-            title = strong(tags$em("p"), "-values"),
-            status = "primary",
-            collapsible = TRUE,
-            collapsed = FALSE,
-            width = '100%',
-            "The probability that our selected estimator takes on a value at
-            least as extreme as what we observed given our null hypothesis. If
-            we were to carry out our study infinitely many times and the null
-            hypothesis accurately modeled what we're studying, then we would
-            expect for our estimator to produce a value at least as extreme as
-            what we have seen 100*(p-value)% of the time. The larger the
-            p-value, the more often we would expect our estimator to take on a
-            value at least as extreme as what we've seen; the smaller, the less
-            often."
+          
+          fluidRow(
+            box(
+              title = strong("Distinguishable Permutations"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = FALSE,
+              width = 6,
+              p("Number of distinguishable permutations of ", tags$em("n"), "objects:"),
+              tags$ul( 
+                tags$li("\\(n_{1}\\) of the \\(1^{st}\\) object."),
+                tags$li("\\(n_{2}\\) of the \\(2^{nd}\\) object."),
+                tags$li("\\(n_{k}\\) of the \\(k^{th}\\) object."),
+                tags$li("Then nPr or permutations of ", tags$em("n"), "objects
+                        taken", tags$em("n"), "at a time is "),
+                tags$li("\\(P=\\binom{n}{(n_{1})(n_{2})\\cdots(n_{k})}=\\dfrac{n!}{(n_{1})!(n_{2})!(n_{3})!\\cdots(n_{k})!}\\)")
+                ### ask how to line up the equal signs for the n!/n
+              )
+            ),
+            box(
+              title = strong("Multiplication Principle"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = FALSE,
+              width = 6,
+              p("If there are: "),
+              tags$ul( 
+                tags$li(("\\({n_{1}}\\)"), "outcomes of experiment one"), 
+                tags$li(("\\({n_{2}}\\)"), "outcomes of experiment two"), 
+                tags$li(("\\({n_{m}}\\)"), "outcomes of experiment m"), 
+                tags$li("Then the number of total outcomes from all experiments", 
+                        ("\\({E_{1},E_{2},E_{3}=}\\)")), 
+                tags$li("\\({(n_{1})\\times(n_{2})\\times(n_{3})\\times\\cdots\\times(n_{m})= n!}\\)")
+              )
+            )
+          ),
+          
+          br(), 
+          
+          div(
+            style = "text-align: center",
+            bsButton(
+              inputId = "goPre",
+              label = "GO!",
+              size = "large",
+              icon = icon("wpexplorer"),
+              style = "default"
+            )
           )
         ),
-        #### Note: you must have at least one of the following pages. You might
-        #### have more than one type and/or more than one of the same type. This
-        #### will be up to you and the goals for your app.
-        #### Set up an Explore Page
+        
+        
+        #### Set up an Explore Page ----
         tabItem(
           tabName = "explore",
           withMathJax(),
           h2("Explore the Concept"),
-          p("This page should include something for the user to do, the more
-            active and engaging, the better. The purpose of this page is to help
-            the user build a productive understanding of the concept your app
-            is dedicated to."),
-          p("Common elements include graphs, sliders, buttons, etc."),
-          p("The following comes from the NHST Caveats App:"),
-        ),
-        #### Set up a Challenge Page ----
-        tabItem(
-          tabName = "challenge",
-          withMathJax(),
-          h2("Challenge Yourself"),
-          p("The general intent of a Challenge page is to have the user take
-            what they learned in an Exploration and apply that knowledge in new
-            contexts/situations. In essence, to have them challenge their
-            understanding by testing themselves."),
-          p("What this page looks like will be up to you. Something you might
-            consider is to re-create the tools of the Exploration page and then
-            a list of questions for the user to then answer.")
-        ),
+          tabsetPanel(
+            tabPanel(
+              withMathJax(),
+              title = "Multiple Choice Layout", 
+              br(), 
+              h4("Question"),
+              uiOutput("context"), 
+              uiOutput("question"),
+              br(),
+              fluidRow(
+                column(
+                  width = 12, 
+                  bsButton(
+                    inputId = "hint",
+                    label = "Hint",
+                    icon = icon("question"),
+                    size = "large",
+                    disabled = FALSE
+                  ),
+                  br(), 
+                  uiOutput("hintDisplay"),
+                  br(),
+                )
+              ), 
+              fluidRow(
+                column(width = 12, 
+                       radioGroupButtons(
+                         inputId = "mc1",
+                         label = tags$b("Which expression addresses the question?"),
+                         status = "game",
+                         direction = "vertical",
+                         selected = character(0),
+                         checkIcon = list(
+                           yes = icon("check-square"),
+                           no = icon("square-o")
+                         ),
+                         
+                         choices = list(
+                           # "Pick the expression below that best addresses the question.",
+                           "\\(\\frac{1}{4}\\)",
+                           "\\(\\frac{2}{4}\\)",
+                           "\\(\\frac{3}{4}\\)",
+                           "\\(\\frac{4}{4}\\)"
+                         ),
+                         justified = FALSE,
+                         individual = FALSE, 
+                       ),  
+                       br(), 
+                )
+              ), 
+              fluidRow(
+                column(
+                  width = 1, 
+                  bsButton(
+                    "restart",
+                    "Restart",
+                    size = "large",
+                    style = "danger",
+                    disabled = FALSE
+                  ), 
+                ), 
+                column(
+                  width = 1, 
+                  bsButton(
+                    inputId = "submit",
+                    label = "Submit",
+                    size = "large",
+                    style = "default",
+                    disabled = FALSE
+                  ), 
+                  
+                ),
+                column(
+                  width = 1, 
+                  uiOutput("mark")
+                ), 
+                column(
+                  width = 1, 
+                  bsButton(
+                    inputId = "nextq",
+                    label = "Next Question",
+                    size = "large",
+                    style = "default",
+                    disabled = TRUE
+                  ),
+                )
+              ),
+              fluidRow(
+                column(
+                  width = 12, 
+                  br(), 
+                  uiOutput("feedback")
+                )
+                
+              ), 
+              uiOutput("math1"),
+              uiOutput("math2")
+            ) 
+            
+          ), 
+          br(), 
+          br(),
+          br(), 
+          
+          div(
+            style = "text-align: center",
+            bsButton(
+              inputId = "goExp",
+              label = "GO!",
+              size = "large",
+              icon = icon("gamepad"),
+              style = "default"
+            )
+          ) 
+        ), 
+        
+        
         #### Set up a Game Page ----
         tabItem(
           tabName = "game",
           withMathJax(),
           h2("Practice/Test Yourself with [Type of Game]"),
-          p("On this type of tab, you'll set up a game for the user to play.
+          p("On this type of page, you'll set up a game for the user to play.
             Game types include Tic-Tac-Toe, Matching, and a version Hangman to
             name a few. If you have ideas for new game type, please let us know.")
         ),
+        
         #### Set up the References Page ----
         tabItem(
           tabName = "references",
           withMathJax(),
           h2("References"),
+          p("You'll need to fill in this page with all of the appropriate
+            references for your app."),
           p(
             class = "hangingindent",
             "Bailey, E. (2015). shinyBS: Twitter bootstrap components for shiny.
             (v0.61). [R package]. Available from
             https://CRAN.R-project.org/package=shinyBS"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Carey, R. and Hatfield, N. (2020). boastUtils: BOAST Utilities. 
+            R package version 0.1.6.3. Available from 
+            https://github.com/EducationShinyAppTeam/boastUtils"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Chang, W., Cheng, J., Allaire, J., Xie, Y., and McPherson, J. 
+            (2020). shiny: Web Application Framework for R. R package version 
+            1.5.0. Available from https://CRAN.R-project.org/package=shiny"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Chang, W. and Borges Ribeiro, B. (2018). shinydashboard: 
+            Create Dashboards with 'Shiny'. R package version 0.7.1. Available 
+            from https://CRAN.R-project.org/package=shinydashboard"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Perrier, V., Meyer, F., and Granjon, D. (2020). shinyWidgets: 
+            Custom Inputs Widgets for Shiny. R package version 0.5.3. Available 
+            from https://CRAN.R-project.org/package=shinyWidgets"
           ),
           br(),
           br(),
@@ -199,8 +378,407 @@ ui <- list(
 
 # Define server logic ----
 server <- function(input, output, session) {
-
+  ## Set up Info button ----
+  observeEvent(
+    eventExpr = input$info,
+    handlerExpr = {
+      sendSweetAlert(
+        session = session,
+        type = "info",
+        title = "Information",
+        text = "This app is designed to help you learn and review Counting
+        Techniques"
+      )
+    }
+  )
+  
+  observeEvent(input$go1,{
+    updateTabItems(
+      session = session,
+      inputId = "pages",
+      selected = "prerequisites")
+  })
+  
+  observeEvent(input$goPre,{
+    updateTabItems(
+      session = session,
+      inputId = "pages",
+      selected = "explore")
+  })
+  
+  observeEvent(input$goExp,{
+    updateTabItems(
+      session = session,
+      inputId = "pages",
+      selected = "game")
+  })
+  
+  ###Explore Page Practice ----
+  withBusyIndicatorServer <- function(buttonId, expr) {
+    # UX stuff: show the "busy" message, hide the other messages, disable the button
+    loadingEl <- sprintf("[data-for-btn=%s] .btn-loading-indicator", buttonId)
+    doneEl <- sprintf("[data-for-btn=%s] .btn-done-indicator", buttonId)
+    errEl <- sprintf("[data-for-btn=%s] .btn-err", buttonId)
+    shinyjs::disable(buttonId)
+    shinyjs::show(selector = loadingEl)
+    shinyjs::hide(selector = doneEl)
+    shinyjs::hide(selector = errEl)
+    on.exit({
+      shinyjs::enable(buttonId)
+      shinyjs::hide(selector = loadingEl)
+    })
+    
+    # Try to run the code when the button is clicked and show an error message if
+    # an error occurs or a success message if it completes
+    tryCatch({
+      value <- expr
+      shinyjs::show(selector = doneEl)
+      shinyjs::delay(2000, shinyjs::hide(selector = doneEl, anim = TRUE, animType = "fade",
+                                         time = 0.5))
+      value
+    }, error = function(err) { errorFunc(err, buttonId) })
+  }
+  
+  ##### Reading in Questions ----
+  questionBank <- read.csv("exploreQuestions.csv", stringsAsFactors = FALSE)
+  Qs_array <- c(1:nrow(questionBank))
+  
+  Qs <<- nrow(questionBank)
+  Qs_array <<- c(1:Qs)
+  id <- 1
+  
+  # Reset button
+  observeEvent(input$restart, {
+    withMathJax()
+    updateButton(
+      session = session, 
+      inputId = "submit", 
+      disabled = FALSE)
+    updateButton(
+      session = session, 
+      inputId = "nextq", 
+      disabled = FALSE)
+    updateButton(
+      session = session, 
+      inputId = "restart", 
+      disabled = FALSE)
+    
+    
+    output$question <- renderUI({
+      withMathJax()
+      hint <<- withMathJax(questionBank[id, "Hint"])
+      return(paste(questionBank[id, "Scenario"], questionBank[id, "Question"]))
+    })
+    
+    output$hint <- renderUI({
+      withMathJax()
+      hint <<- withMathJax(questionBank[id, "Hint"])
+      return(questionBank[id, "Hint"])
+    })
+    
+    updateRadioGroupButtons(
+      session, "mc1",
+      choices = list(
+        questionBank[id, "A"],
+        questionBank[id, "B"],
+        questionBank[id, "C"],
+        questionBank[id, "D"] 
+      ),
+      selected = character(0),
+      checkIcon = list(
+        yes = icon("check-square"),
+        no = icon("square-o")
+      ),
+      status = "game"
+    )
+    output$math1 <- renderUI({
+      withMathJax()
+    })
+    output$math2 <- renderUI({
+      withMathJax()
+    })
+    output$mark <- renderUI({
+      img(src = NULL, width = 50)
+    })
+    
+  })
+  
+  # Print out a question
+  output$question <- renderUI({
+    withMathJax()
+    id <<- sample(Qs_array, 1, replace = FALSE, prob = NULL)
+    Qs_array <<- Qs_array[!Qs_array %in% id]
+    updateRadioGroupButtons(
+      session, "mc1",
+      selected = character(0),
+      choices = list(
+        questionBank[id, "A"],
+        questionBank[id, "B"],
+        questionBank[id, "C"],
+        questionBank[id, "D"]
+      ),
+      checkIcon = list(
+        yes = icon("check-square"),
+        no = icon("square-o")
+      ),
+      status = "game"
+    )
+    output$math1 <- renderUI({
+      withMathJax()
+    })
+    output$math2 <- renderUI({
+      withMathJax()
+    })
+    hint <<- withMathJax(questionBank[id, "Hint"])
+    return(withMathJax(paste(questionBank[id, "Scenario"], questionBank[id, "Question"])))
+  })
+  
+  ### NEXT QUESTION BUTTON###
+  observeEvent(input$nextq, {
+    withMathJax()
+    if (length(Qs_array) > 1) {
+      id <<- sample(Qs_array, 1, replace = FALSE, prob = NULL)
+      Qs_array <<- Qs_array[!Qs_array %in% id]
+      hint <<- questionBank["Hint"]
+      withBusyIndicatorServer("nextq", {
+        updateButton(session, "submit", disabled = FALSE)
+        output$question <- renderUI({
+          return(paste(questionBank[id, "Scenario"], questionBank[id, "Question"]))
+        })
+        
+        updateRadioGroupButtons(
+          session, "mc1",
+          selected = character(0),
+          choices = list(
+            questionBank[id, "A"],
+            questionBank[id, "B"],
+            questionBank[id, "C"],
+            questionBank[id, "D"] 
+          ),
+          checkIcon = list(
+            yes = icon("check-square"),
+            no = icon("square-o")
+          ),
+          status = "game"
+        )
+        output$math1 <- renderUI({
+          withMathJax()
+        })
+        output$math2 <- renderUI({
+          withMathJax()
+        })
+        output$mark <- renderUI({
+          img(src = NULL, width = 50)
+        })
+      })
+      
+      ##HINT###
+      output$hintDisplay <- renderUI({
+        return(NULL)
+      })
+      output$feedback <- renderUI({
+        return(NULL)
+      })
+    }
+    else if (length(Qs_array) == 1) {
+      id <<- Qs_array[1]
+      Qs_array <<- Qs_array[!Qs_array %in% id]
+      hint <<- questionBank[id, "Hint"]
+      withBusyIndicatorServer("nextq", {
+        output$question <- renderUI({
+          return(paste(questionBank[id, "Scenario"], questionBank[id, "Question"]))
+        })
+        
+        updateButton(
+          session = session, 
+          inputId = "submit", 
+          disabled = FALSE)
+        updateRadioGroupButtons(
+          session = session, 
+          inputId = "mc1",
+          selected = character(0),
+          choices = list(
+            questionBank[id, "A"],
+            questionBank[id, "B"],
+            questionBank[id, "C"],
+            questionBank[id, "D"] 
+          ),
+          checkIcon = list(
+            yes = icon("check-square"),
+            no = icon("square-o")
+          ),
+          status = "game"
+        )
+        output$math1 <- renderUI({
+          withMathJax()
+        })
+        output$math2 <- renderUI({
+          withMathJax()
+        })
+        output$mark <- renderUI({
+          img(src = NULL, width = 50)
+        })
+      })
+      
+      ##HINT###
+      output$hintDisplay <- renderUI({
+        return(NULL)
+      })
+      output$feedback <- renderUI({
+        return(NULL)
+      })
+    }
+    else {
+      updateButton(
+        session = session, 
+        inputId = "submit", 
+        disabled = TRUE)
+      updateButton(
+        session = session, 
+        inputId = "nextq", 
+        disabled = TRUE)
+      updateButton(
+        session = session, 
+        inputId = "restart", 
+        disabled = FALSE)
+      sendSweetAlert(
+        session = session,
+        title = "Run out of question",
+        type = "error",
+        closeOnClickOutside = TRUE,
+        h4("Run out of question. Please click Restart to start over")
+      )
+      output$question <- renderUI({
+        return(NULL)
+      })
+      
+      output$hintDisplay <- renderUI({
+        return(NULL)
+      })
+      
+      output$feedback <- renderUI({
+        return(NULL)
+      })
+      updateRadioGroupButtons(
+        session, "mc1",
+        selected = character(0),
+        choices = list(
+          questionBank[id, "A"],
+          questionBank[id, "B"],
+          questionBank[id, "C"],
+          questionBank[id, "D"] 
+        ),
+        checkIcon = list(
+          yes = icon("check-square"),
+          no = icon("square-o")
+        ),
+        status = "game"
+      )
+      output$math1 <- renderUI({
+        withMathJax()
+      })
+      output$math2 <- renderUI({
+        withMathJax()
+      })
+    }
+  })
+  
+  ### SUBMIT BUTTON###
+  observeEvent(input$submit, {
+    withMathJax()
+    letterAnswer <- questionBank[id, "Answer"]
+    cAnswer <- questionBank[id, letterAnswer]
+    mc1Length <- length(input$mc1)
+    print(mc1Length)
+    print(letterAnswer)
+    print(cAnswer)
+    if(length(input$mc1) == 0){
+      answer = "E"
+      updateButton(
+        session = session, 
+        inputId = "submit", 
+        disabled = TRUE)
+      updateButton(
+        session = session, 
+        inputId = "nextq", 
+        disabled = FALSE)
+      updateButton(
+        session = session, 
+        inputId = "restart", 
+        disabled = FALSE)
+      
+      output$mark <- renderIcon(
+        icon = ifelse(
+          test = answer == cAnswer, 
+          yes = "correct", 
+          no = "incorrect"
+        )
+      )
+    }
+    else{
+      input$mc1 == input$mc1
+      updateButton(
+        session = session, 
+        inputId = "submit", 
+        disabled = TRUE)
+      updateButton(
+        session = session, 
+        inputId = "nextq", 
+        disabled = FALSE)
+      updateButton(
+        session = session, 
+        inputId = "restart", 
+        disabled = FALSE)
+      
+      output$mark <- renderIcon(
+        icon = ifelse(
+          test = input$mc1 == cAnswer, 
+          yes = "correct", 
+          no = "incorrect"
+        )
+      )
+    }
+    
+    ### FEEDBACK###
+    output$feedback <- renderUI({
+      withMathJax()
+      letterAnswer <- questionBank[id, "Answer"]
+      cAnswer <- questionBank[id, letterAnswer]
+      if(length(input$mc1) == 0){
+        answer = "E"
+      }
+      else {
+        answer = input$mc1
+      }
+      if (answer == cAnswer) {
+        p("CORRECT!", br(), withMathJax(questionBank[id, "Feedback"]))
+      }
+      else if (answer == "E"){
+        p(strong("Answer:"), br(), questionBank[id, "Answer"], 
+          br(), strong("Explanation:"), br(),  withMathJax(questionBank[id, "Feedback"]))
+      }
+      else{
+        p(strong("Answer:"), br(), questionBank[id, "Answer"], 
+          br(), strong("Explanation:"), br(),  withMathJax(questionBank[id, "Feedback"]))
+      }
+    })
+  })
+  
+  ### PRINT HINTS###
+  observeEvent(
+    eventExpr = input$hint, 
+    handlerExpr = {
+      output$math1 <- renderUI({
+        withMathJax()
+      })
+      output$math2 <- renderUI({
+        withMathJax()
+      })
+      withMathJax()
+      output$hintDisplay <- renderUI({
+        p(tags$b("Hint:"), questionBank[id, "Hint"])
+      })
+    })
 }
-
 # Boast App Call ----
 boastUtils::boastApp(ui = ui, server = server)
